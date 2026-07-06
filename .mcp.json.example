@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "au-eli-mcp": {
+      "command": "au-eli-mcp",
+      "env": {
+        "AU_ELI_BASE_URL": "https://www.legislation.gov.au",
+        "AU_ELI_CACHE_DIR": "~/.matematic/cache/au-eli",
+        "AU_ELI_AUDIT_DIR": "~/.matematic/audit"
+      }
+    }
+  }
+}
