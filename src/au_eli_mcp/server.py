@@ -21,6 +21,7 @@ from mcp.types import ToolAnnotations
 
 from .audit import AuditLogger, hash_input, timer
 from .citations import build_summary, extract_text, parse_search_results
+from . import runtime
 from .client import DEFAULT_BASE_URL, FrliClient
 from .models import ActSearchResult, ActSummary, ActText
 
@@ -83,7 +84,7 @@ mcp: FastMCP = FastMCP(name="au-eli-mcp", instructions=INSTRUCTIONS)
 
 
 def _base_url() -> str:
-    return os.environ.get("AU_ELI_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
+    return os.environ.get("AU_ELI_BASE_URL", runtime.base_url("eli", DEFAULT_BASE_URL)).rstrip("/")
 
 
 def _audit() -> AuditLogger:
