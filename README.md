@@ -61,6 +61,25 @@ No API key. legislation.gov.au is keyless.
 }
 ```
 
+### Windows 11 ze Smart App Control
+
+Smart App Control blokuje niepodpisane pliki wykonywalne, a `uvx.exe`, `pip.exe`
+i generowany przy instalacji `au-eli-mcp.exe` podpisane nie sa. `python.exe`
+z python.org jest podpisany przez Python Software Foundation, wiec uruchomienie
+przez modul omija blokade:
+
+```bash
+python -m pip install au-eli-mcp
+python -m au_eli_mcp
+```
+
+```json
+{ "mcpServers": { "au-eli-mcp": { "command": "python", "args": ["-m", "au_eli_mcp"] } } }
+```
+
+Nie wylaczaj Smart App Control, zeby to obejsc - wylaczenia nie da sie cofnac
+bez ponownej instalacji systemu.
+
 ## Governance
 
 - **Public data only** - read-only against legislation.gov.au; no client data leaves the machine.
