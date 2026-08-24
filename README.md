@@ -25,6 +25,7 @@ human-readable citation + a source URL), adapted for a jurisdiction with no ELI.
 |---|---|
 | `au_search_acts` | Search Commonwealth Acts by (partial) title. |
 | `au_get_text` | The current consolidated text of an Act (truncated at ~300,000 characters). |
+| `au_coverage` | Declare what this connector covers, when each family was captured, and - explicitly - what it does NOT cover. Every gap carries a fallback. |
 
 Every response carries the contract: `eli_uri` (Australia has no ELI - this is the durable
 legislation.gov.au URL keyed on the document's own FRLI identifier, e.g.
