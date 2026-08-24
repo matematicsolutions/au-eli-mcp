@@ -42,6 +42,7 @@ This MVP covers **Acts only** (`collection(act)`). Regulations and other instrum
 
 ## Hard constraints
 
+- **Do not answer past the edge of this corpus** - when a search comes back empty, or the question touches material this connector does not carry, call `au_coverage` and relay what it says is missing. Absence here is not absence in the law.
 - **No native ELI** - Australia has not deployed ELI. `eli_uri` is the legislation.gov.au document URL, never invented; see `eli_note`.
 - **Acts only in this MVP** - regulations, legislative instruments, and repealed/historical versions are not covered; only the current (`latest`) text of an Act.
 - **Every response has `human_readable_citation` + `source_url`** - cite both to the user.
