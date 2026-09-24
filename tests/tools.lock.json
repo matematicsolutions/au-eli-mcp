@@ -1,0 +1,368 @@
+{
+  "package_version": "0.3.3",
+  "tools": {
+    "au_coverage": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Declare what this connector covers, how it is sourced, and what it does NOT cover.\n\nCall this before telling a user that the law \"does not contain\" something, and whenever\na search comes back empty: the absence may be a gap in this connector rather than in the\nlaw. Every gap carries a fallback saying where to look instead.\n\nReturns:\n    ``Coverage`` with families, an as-of note, and a non-empty list of known gaps.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {},
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "au_coverage",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "What this connector covers, how it is sourced, and what it does not cover.",
+          "properties": {
+            "as_of_note": {
+              "description": "States what the dates mean, and what they do not promise.",
+              "type": "string"
+            },
+            "families": {
+              "items": {
+                "additionalProperties": true,
+                "description": "One data family this connector exposes.",
+                "properties": {
+                  "captured_at": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Date this family was last captured (ISO). None when queried live."
+                  },
+                  "live": {
+                    "default": true,
+                    "description": "True when queried live instead of from a snapshot.",
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "description": "Data family, e.g. 'Federal legislation'.",
+                    "type": "string"
+                  },
+                  "source": {
+                    "description": "Official source the data comes from.",
+                    "type": "string"
+                  },
+                  "tool": {
+                    "description": "Tool or tools that reach this family.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "tool",
+                  "source"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "known_gaps": {
+              "description": "Never empty. An empty list would mean 'not checked', not 'no gaps'.",
+              "items": {
+                "additionalProperties": true,
+                "description": "A known, named hole in this connector's coverage - plus the way around it.",
+                "properties": {
+                  "fallback": {
+                    "description": "Where to go instead.",
+                    "type": "string"
+                  },
+                  "family": {
+                    "description": "Which family the gap belongs to.",
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "Stable gap identifier.",
+                    "type": "string"
+                  },
+                  "missing": {
+                    "description": "What is NOT available through this connector.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "family",
+                  "missing",
+                  "fallback"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "status": {
+              "default": "ok",
+              "enum": [
+                "ok",
+                "degraded",
+                "failed"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "as_of_note"
+          ],
+          "type": "object"
+        }
+      },
+      "sha256": "2e389156ecaa77a1ce7578e6eb2342a6fec56bbce71220e6723d9d15565d3d3c"
+    },
+    "au_get_text": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Fetch the current consolidated text of an Act by its FRLI identifier.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "frli_id": {
+              "description": "e.g. ``\"C2004A00042\"``.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "frli_id"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "au_get_text",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "Result of ``au_get_text`` - the current consolidated text of an Act.",
+          "properties": {
+            "byte_size": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "content": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "dataset_note": {
+              "default": "The Federal Register of Legislation (legislation.gov.au) is Australia's official source of Commonwealth legislation. Australia has no ELI scheme; eli_uri carries the durable legislation.gov.au URL keyed on the document's own FRLI identifier (see eli_note). Discover by title (au_search_acts), then fetch the current consolidated text by frli_id. This MVP covers Acts only; regulations and other instrument types are not yet covered.",
+              "type": "string"
+            },
+            "eli_note": {
+              "default": "Australia has not deployed ELI. eli_uri is the durable legislation.gov.au document URL (https://www.legislation.gov.au/{frli_id}/latest), keyed on the Federal Register of Legislation's own persistent identifier (FRLI ID) - never invented.",
+              "type": "string"
+            },
+            "eli_uri": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "frli_id": {
+              "type": "string"
+            },
+            "human_readable_citation": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "truncated": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "frli_id"
+          ],
+          "type": "object"
+        }
+      },
+      "sha256": "f43a7893ad98b63fb12183bd230218c16f3c9778f732d8c84b09c95eb91191e1"
+    },
+    "au_search_acts": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Search Commonwealth Acts by (partial) title.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "description": "e.g. ``\"privacy\"`` or ``\"Aboriginal Affairs\"``.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "au_search_acts",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "Result of ``au_search_acts``.",
+          "properties": {
+            "dataset_note": {
+              "default": "The Federal Register of Legislation (legislation.gov.au) is Australia's official source of Commonwealth legislation. Australia has no ELI scheme; eli_uri carries the durable legislation.gov.au URL keyed on the document's own FRLI identifier (see eli_note). Discover by title (au_search_acts), then fetch the current consolidated text by frli_id. This MVP covers Acts only; regulations and other instrument types are not yet covered.",
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "additionalProperties": true,
+                "description": "One Act as returned by ``au_search_acts``.",
+                "properties": {
+                  "eli_note": {
+                    "default": "Australia has not deployed ELI. eli_uri is the durable legislation.gov.au document URL (https://www.legislation.gov.au/{frli_id}/latest), keyed on the Federal Register of Legislation's own persistent identifier (FRLI ID) - never invented.",
+                    "type": "string"
+                  },
+                  "eli_uri": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "frli_id": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "human_readable_citation": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "source_url": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "title": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "type": "object"
+        }
+      },
+      "sha256": "ee4049ef3847f552978820389566e24ff4d4775a97006a76386cbcb9452d0d15"
+    }
+  },
+  "toolset_sha256": "f004b444221c9bfe03da88ee0b82447f8e678e10083caf48605ece924fefc702"
+}
